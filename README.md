@@ -5,6 +5,34 @@ This is an opinionated template for creating Haskell projects. It uses
 
 > **TODO** Provide minimum viable documentation.
 
+## Quickstart
+
+Create your repository from this template, clone it on your computer
+and enter its directory.
+
+Then, run following to configure your project:
+
+```sh
+bash ./run-template.sh
+```
+
+It will prompt some questions and configure your project according to
+your answers.
+
+Once it is configured, provision `direnv`:
+
+```sh
+direnv allow
+```
+
+And run the big, long build command as given in the next section.
+
+Finally, you can remove the `run-template.sh` script:
+
+```sh
+rm run-template.sh
+```
+
 ## Development
 
 Big, long build command for the impatient:
