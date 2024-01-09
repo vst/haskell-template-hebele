@@ -4,7 +4,7 @@ github: "vst/haskell-template-hebele"
 license: MIT
 author: "Vehbi Sinan Tunalioglu"
 maintainer: "vst@vsthost.com"
-copyright: "Copyright (c) 2023 Vehbi Sinan Tunalioglu"
+copyright: "Copyright (c) 2024 Vehbi Sinan Tunalioglu"
 
 extra-source-files:
   - README.md

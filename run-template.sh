@@ -6,7 +6,7 @@ _def_title="Haskell Project Template"
 _def_github="vst/haskell-template-hebele"
 _def_author="Vehbi Sinan Tunalioglu"
 _def_maintainer="vst@vsthost.com"
-_def_copyright="Copyright (c) 2023 Vehbi Sinan Tunalioglu"
+_def_copyright="Copyright (c) 2024 Vehbi Sinan Tunalioglu"
 
 ## Initialize variables:
 _var_name="${_def_name}"
