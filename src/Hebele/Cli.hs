@@ -7,9 +7,9 @@ import Control.Applicative ((<**>), (<|>))
 import Control.Monad (join)
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
+import qualified Hebele.Meta as Meta
 import qualified Options.Applicative as OA
 import System.Exit (ExitCode (..))
-import qualified Zamazingo.Meta as Z.Meta
 
 
 -- * Entrypoint
@@ -87,7 +87,7 @@ doFarewell n = do
 -- | Version option parser.
 infoOptVersion :: OA.Parser (a -> a)
 infoOptVersion =
-  OA.infoOption Z.Meta.versionString $
+  OA.infoOption Meta.versionString $
     OA.short 'v'
       <> OA.long "version"
       <> OA.help "Show application version and exit"
@@ -96,7 +96,7 @@ infoOptVersion =
 -- | Header 'OA.InfoMod'.
 infoModHeader :: OA.InfoMod a
 infoModHeader =
-  OA.header (T.unpack (Z.Meta.name <> " - " <> Z.Meta.title <> " v" <> Z.Meta.versionText))
+  OA.header (T.unpack (Meta.name <> " - " <> Meta.title <> " v" <> Meta.versionText))
 
 
 -- | Footer 'OA.InfoMod'.

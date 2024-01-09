@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | This module provides project metadata information definitions.
-module Zamazingo.Meta where
+module Hebele.Meta where
 
 import qualified Data.Text as T
 import Data.Version (Version, showVersion)
