@@ -24,7 +24,7 @@ let
   '';
 in
 pkgs.haskell.lib.justStaticExecutables (
-  drv.overrideAttrs (oldAttrs: rec {
+  drv.overrideAttrs (oldAttrs: {
     nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ extraNativeBuildInputs;
     postFixup = (oldAttrs.postFixup or "") + extraPostFixup;
   })
