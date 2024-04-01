@@ -91,6 +91,7 @@ let
       pkgs.nil
       pkgs.nixpkgs-fmt
       pkgs.nodePackages.prettier
+      pkgs.upx
     ];
   };
 

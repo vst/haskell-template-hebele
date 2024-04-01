@@ -54,6 +54,9 @@ docker exec "${CONTAINER_NAME}" strip "${BUILD_PATH}"
 ## Copy the binary to the host:
 docker cp "${CONTAINER_NAME}:${BUILD_PATH}" "${FINAL_EXECUTABLE_PATH}"
 
+## Compress the executable:
+upx "${FINAL_EXECUTABLE_PATH}"
+
 ## Cleanup:
 docker exec -w "/app" "${CONTAINER_NAME}" cabal clean
 docker exec -w "/app" "${CONTAINER_NAME}" cabal v1-clean
