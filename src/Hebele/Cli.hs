@@ -5,6 +5,8 @@ module Hebele.Cli where
 
 import Control.Applicative ((<**>), (<|>))
 import Control.Monad (join)
+import qualified Data.Aeson as Aeson
+import qualified Data.ByteString.Lazy.Char8 as BLC
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
 import qualified Hebele.Meta as Meta
@@ -35,7 +37,7 @@ cli =
 optProgram :: OA.Parser (IO ExitCode)
 optProgram =
   commandGreet
-    <|> commandFarewell
+    <|> commandVersion
 
 
 -- * Commands
@@ -61,24 +63,23 @@ doGreet n = do
   pure ExitSuccess
 
 
--- ** farewell
+-- ** version
 
 
--- | Definition for @farewell@ CLI command.
-commandFarewell :: OA.Parser (IO ExitCode)
-commandFarewell = OA.hsubparser (OA.command "farewell" (OA.info parser infomod) <> OA.metavar "farewell")
+-- | Definition for @version@ CLI command.
+commandVersion :: OA.Parser (IO ExitCode)
+commandVersion = OA.hsubparser (OA.command "version" (OA.info parser infomod) <> OA.metavar "version")
   where
-    infomod = OA.fullDesc <> infoModHeader <> OA.progDesc "Say farewell to user." <> OA.footer "This command prints a farewell message to the console."
+    infomod = OA.fullDesc <> infoModHeader <> OA.progDesc "Show version and build information." <> OA.footer "This command shows version and build information."
     parser =
-      doFarewell
-        <$> OA.strOption (OA.short 'n' <> OA.long "name" <> OA.value "World" <> OA.showDefault <> OA.help "Whom to say farewell to.")
+      doVersion
+        <$> OA.switch (OA.short 'j' <> OA.long "json" <> OA.help "Format output in JSON.")
 
 
--- | @farewell@ CLI command program.
-doFarewell :: T.Text -> IO ExitCode
-doFarewell n = do
-  TIO.putStrLn ("Thanks for all the fish, " <> n <> "!")
-  pure ExitSuccess
+-- | @version@ CLI command program.
+doVersion :: Bool -> IO ExitCode
+doVersion True = BLC.putStrLn (Aeson.encode Meta.buildInfo) >> pure ExitSuccess
+doVersion False = TIO.putStrLn (Meta.prettyBuildInfo Meta.buildInfo) >> pure ExitSuccess
 
 
 -- * Helpers
