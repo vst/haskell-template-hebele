@@ -50,6 +50,12 @@ hpack &&
     cabal haddock -O0
 ```
 
+To test and build codebase in development environment, run:
+
+```sh
+dev-test-build
+```
+
 <!-- REFERENCES -->
 
 [Nix]: https://nixos.org
