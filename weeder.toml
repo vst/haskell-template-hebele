@@ -1,0 +1,10 @@
+roots = [
+  ## Definitions we always need:
+  "^Main.main$",
+  "^Hebele.Cli.*$",
+  "^Paths_haskell_template_hebele.*",
+
+  ## Temporary suspensions:
+  "^Zamazingo.*",
+]
+type-class-roots = true

@@ -91,6 +91,7 @@ let
       thisHaskell.haskell-language-server
       thisHaskell.hlint
       thisHaskell.hpack
+      thisHaskell.weeder
 
       ## Other build inputs for various development requirements:
       pkgs.docker-client
