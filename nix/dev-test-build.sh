@@ -105,6 +105,13 @@ _cabal_test() {
     _print_success "${_start}" "$(_get_now)"
 }
 
+_weeder() {
+    _print_header "weeder (v$(weeder --version | head -n1 | cut -d' ' -f3))"
+    _start=$(_get_now)
+    chronic -- weeder
+    _print_success "${_start}" "$(_get_now)"
+}
+
 _cabal_haddock() {
     _print_header "cabal haddock (v$(cabal --numeric-version))"
     _start=$(_get_now)
@@ -124,5 +131,6 @@ _hlint
 _cabal_build
 _cabal_run
 _cabal_test
+_weeder
 _cabal_haddock
 printf "Finished all in %ss" "$(_get_diff "${_scr_start}" "$(_get_now)")"
