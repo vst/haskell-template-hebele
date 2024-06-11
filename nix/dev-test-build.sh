@@ -6,6 +6,20 @@
 ## Fail on any error:
 set -e
 
+## Declare default styles:
+_sty_bold=""
+_sty_underline=""
+_sty_standout=""
+_sty_normal=""
+_sty_black=""
+_sty_red=""
+_sty_green=""
+_sty_yellow=""
+_sty_blue=""
+_sty_magenta=""
+_sty_cyan=""
+_sty_white=""
+
 ## Set styles if we are on terminal:
 if test -t 1; then
     ## Check if the terminal supports colors:
@@ -133,4 +147,4 @@ _cabal_run
 _cabal_test
 _weeder
 _cabal_haddock
-printf "Finished all in %ss" "$(_get_diff "${_scr_start}" "$(_get_now)")"
+printf "Finished all in %ss\n" "$(_get_diff "${_scr_start}" "$(_get_now)")"
