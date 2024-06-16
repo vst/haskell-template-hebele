@@ -42,6 +42,20 @@ if test -t 1; then
     fi
 fi
 
+_clean=""
+
+while getopts ":c" opt; do
+    case ${opt} in
+        c)
+            _clean="true"
+            ;;
+        ?)
+            echo "Invalid option: -${OPTARG}."
+            exit 1
+            ;;
+    esac
+done
+
 _get_now() {
     t=${EPOCHREALTIME} # remove the decimal separator (s → µs)
     t=${t%???}         # remove the last three digits (µs → ms)
@@ -61,6 +75,13 @@ _print_success() {
     _until="${2}"
     _elapsed=$(_get_diff "${_start}" "${_until}")
     printf "${_sty_bold}${_sty_green} ✅ %ss${_sty_normal}\n" "${_elapsed}"
+}
+
+_clean() {
+    _print_header "clean"
+    _start=$(_get_now)
+    chronic -- cabal clean && chronic -- cabal v1-clean
+    _print_success "${_start}" "$(_get_now)"
 }
 
 _hpack() {
@@ -137,6 +158,9 @@ _cabal_haddock() {
 }
 
 _scr_start=$(_get_now)
+if [ -n "${_clean}" ]; then
+    _clean
+fi
 _hpack
 _fourmolu
 _prettier
