@@ -147,6 +147,13 @@ _weeder() {
     _print_success "${_start}" "$(_get_now)"
 }
 
+_stan() {
+    _print_header "stan ($(stan --version | head -n 1 | cut -f 2 -d " "))"
+    _start=$(_get_now)
+    chronic -- stan --hiedir ./dist-newstyle
+    _print_success "${_start}" "$(_get_now)"
+}
+
 _cabal_haddock() {
     _print_header "cabal haddock (v$(cabal --numeric-version))"
     _start=$(_get_now)
@@ -169,6 +176,7 @@ _hlint
 _cabal_build
 _cabal_run
 _cabal_test
+_stan
 _weeder
 _cabal_haddock
 printf "Finished all in %ss\n" "$(_get_diff "${_scr_start}" "$(_get_now)")"
