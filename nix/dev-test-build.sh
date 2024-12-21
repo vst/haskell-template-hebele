@@ -44,6 +44,16 @@ fi
 
 _clean=""
 
+## Check if we are an cabal external command:
+CABAL="${CABAL:-}"
+if [ -n "${CABAL}" ]; then
+    _cabal="${CABAL}"
+    shift
+else
+    _cabal="$(command -v cabal)"
+fi
+
+## Parse options:
 while getopts ":c" opt; do
     case ${opt} in
         c)
@@ -80,7 +90,7 @@ _print_success() {
 _clean() {
     _print_header "clean"
     _start=$(_get_now)
-    chronic -- cabal clean && chronic -- cabal v1-clean
+    chronic -- "${_cabal}" clean && chronic -- "${_cabal}" v1-clean
     _print_success "${_start}" "$(_get_now)"
 }
 
@@ -120,23 +130,23 @@ _hlint() {
 }
 
 _cabal_build() {
-    _print_header "cabal build (v$(cabal --numeric-version))"
+    _print_header "cabal build (v$("${_cabal}" --numeric-version))"
     _start=$(_get_now)
-    chronic -- cabal build -O0
+    chronic -- "${_cabal}" build -O0
     _print_success "${_start}" "$(_get_now)"
 }
 
 _cabal_run() {
-    _print_header "cabal run (v$(cabal --numeric-version))"
+    _print_header "cabal run (v$("${_cabal}" --numeric-version))"
     _start=$(_get_now)
-    chronic -- cabal run -O0 haskell-template-hebele -- --version
+    chronic -- "${_cabal}" run -O0 haskell-template-hebele -- --version
     _print_success "${_start}" "$(_get_now)"
 }
 
 _cabal_test() {
-    _print_header "cabal test (v$(cabal --numeric-version))"
+    _print_header "cabal test (v$("${_cabal}" --numeric-version))"
     _start=$(_get_now)
-    chronic -- cabal v1-test
+    chronic -- "${_cabal}" v1-test
     _print_success "${_start}" "$(_get_now)"
 }
 
@@ -155,9 +165,9 @@ _stan() {
 }
 
 _cabal_haddock() {
-    _print_header "cabal haddock (v$(cabal --numeric-version))"
+    _print_header "cabal haddock (v$("${_cabal}" --numeric-version))"
     _start=$(_get_now)
-    chronic -- cabal haddock -O0 \
+    chronic -- "${_cabal}" haddock -O0 \
         --haddock-quickjump \
         --haddock-hyperlink-source \
         --haddock-html-location="https://hackage.haskell.org/package/\$pkg-\$version/docs"

@@ -67,7 +67,7 @@ let
 
   ## Prepare dev-test-build script:
   dev-test-build = pkgs.writeShellApplication {
-    name = "dev-test-build";
+    name = "cabal-dev-test-build";
     text = builtins.readFile ./nix/dev-test-build.sh;
     runtimeInputs = [ pkgs.bash pkgs.bc pkgs.moreutils ];
   };

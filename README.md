@@ -50,10 +50,22 @@ hpack &&
     cabal haddock -O0
 ```
 
-To test and build codebase in development environment, run:
+To run checks, tests and build the codebase in the development environment, run:
 
 ```sh
-dev-test-build
+cabal-dev-test-build
+```
+
+You can pass `-c` to clean the build artifacts first:
+
+```sh
+cabal-dev-test-build -c
+```
+
+As of Cabal 3.12, you can now run the above as an external `cabal` command:
+
+```sh
+cabal dev-test-build [-c]
 ```
 
 <!-- REFERENCES -->
