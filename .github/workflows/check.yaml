@@ -12,14 +12,12 @@ jobs:
       - name: "Checkout Codebase"
         uses: "actions/checkout@v4"
 
-      - name: "Install nix"
-        uses: "cachix/install-nix-action@v27"
-        with:
-          nix_path: "nixpkgs=channel:nixos-24.05"
+      - name: "Install Nix"
+        uses: "DeterminateSystems/nix-installer-action@v16"
 
-      - name: "Use Magic Nix cache"
-        uses: "DeterminateSystems/magic-nix-cache-action@v7"
+      - name: "Use Nix Cache"
+        uses: "DeterminateSystems/magic-nix-cache-action@v8"
 
       - name: "Check, Test and Build"
         run: |
-          nix-shell --pure --run "cabal update --ignore-project && dev-test-build"
+          nix-shell --pure --run "cabal update --ignore-project && cabal dev-test-build"
