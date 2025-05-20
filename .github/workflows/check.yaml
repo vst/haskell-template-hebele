@@ -13,11 +13,16 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install Nix"
-        uses: "DeterminateSystems/nix-installer-action@v16"
-
-      - name: "Use Nix Cache"
-        uses: "DeterminateSystems/magic-nix-cache-action@v8"
+        uses: "DeterminateSystems/nix-installer-action@v17"
 
       - name: "Check, Test and Build"
         run: |
-          nix-shell --pure --run "cabal update --ignore-project && cabal dev-test-build"
+          nix develop --command bash -c "cabal update --ignore-project && cabal dev-test-build"
+
+      - name: "Build Docker Image"
+        run: |
+          nix build .#docker
+
+      - name: "Load Docker Image"
+        run: |
+          docker load <./result
