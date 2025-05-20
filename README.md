@@ -1,7 +1,7 @@
 # Haskell Project Template
 
 This is an opinionated template for creating Haskell projects. It uses
-[Nix], [hpack] and [cabal].
+[Nix] [Flakes], [hpack] and [cabal].
 
 > **TODO** Provide minimum viable documentation.
 
@@ -19,10 +19,24 @@ bash ./run-template.sh
 It will prompt some questions and configure your project according to
 your answers.
 
-Once it is configured, provision `direnv`:
+Once it is configured, provision `direnv`. You can copy the `.envrc.tmpl`:
+
+```sh
+cp .envrc.tmpl .envrc
+```
+
+Then, you can run the following command to allow `direnv` to activate the
+development environment:
 
 ```sh
 direnv allow
+```
+
+Alternatively, you can simply run the following command to activate the
+development environment:
+
+```sh
+nix develop
 ```
 
 And run the big, long build command as given in the next section.
@@ -71,5 +85,6 @@ cabal dev-test-build [-c]
 <!-- REFERENCES -->
 
 [Nix]: https://nixos.org
+[Flakes]: https://wiki.nixos.org/wiki/Flakes
 [hpack]: https://github.com/sol/hpack
 [cabal]: https://www.haskell.org/cabal
