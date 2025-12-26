@@ -131,20 +131,20 @@ ${_clean} && _run_check "clean" "${_cabal}" clean && _run_check "v1-clean" "${_c
 _run_check "hpack (v$(hpack --numeric-version))" \
   hpack
 
-_run_check "fourmolu (v$(fourmolu --version | head -n1 | cut -d' ' -f2))" \
-  fourmolu --quiet --mode check app/ src/ test/
+_run_check "nixfmt (v$(nixfmt --numeric-version))" \
+  find . -type f -iname "*.nix" -exec nixfmt --check {} +
 
 _run_check "prettier (v$(prettier --version))" \
   prettier --check .
-
-_run_check "nixfmt (v$(nixfmt --version | cut -f2 -d" "))" \
-  find . -iname "*.nix" -exec nixfmt --check {} +
 
 _run_check "taplo lint (v$(taplo --version | cut -f2 -d" "))" \
   taplo lint
 
 _run_check "taplo format (v$(taplo --version | cut -f2 -d" "))" \
   taplo format --check
+
+_run_check "fourmolu (v$(fourmolu --version | head -n1 | cut -f2 -d" "))" \
+  fourmolu --quiet --mode check app/ src/ test/
 
 _run_check "hlint (v$(hlint --numeric-version))" \
   hlint app/ src/ test/
@@ -158,10 +158,10 @@ _run_check "cabal run (v$("${_cabal}" --numeric-version))" \
 _run_check "cabal test (v$("${_cabal}" --numeric-version))" \
   "${_cabal}" v1-test --ghc-options="-O0"
 
-_run_check "weeder (v$(weeder --version | head -n1 | cut -d' ' -f3))" \
+_run_check "weeder (v$(weeder --version | head -n1 | cut -f3 -d" "))" \
   weeder
 
-_run_check "stan ($(stan --version | head -n 1 | cut -f 2 -d " "))" \
+_run_check "stan ($(stan --version | head -n1 | cut -f2 -d" "))" \
   stan --hiedir ./dist-newstyle
 
 _run_check "cabal haddock (v$("${_cabal}" --numeric-version))" \
