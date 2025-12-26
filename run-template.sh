@@ -26,7 +26,7 @@ EOF
 
 read -p "Do you want to proceed? (y/N) " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    >&2 echo "Exiting..."
+  >&2 echo "Exiting..."
 fi
 echo
 
@@ -89,28 +89,28 @@ EOF
 echo
 read -p "Do you want to proceed? (y/N) " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    >&2 echo "Exiting..."
+  >&2 echo "Exiting..."
 fi
 echo
 
 _files() {
-    find . -type d \( -path ./dist -o -path ./dist-newstyle -o -path ./.direnv -o -path ./.git \) -prune -o -type f -a -not -name "run-template.sh" -print
+  find . -type d \( -path ./dist -o -path ./dist-newstyle -o -path ./.direnv -o -path ./.git \) -prune -o -type f -a -not -name "run-template.sh" -print
 }
 
 _update() {
-    _file="${1}"
-    _fpath_def="$(echo "${_def_name}" | sed "s/\-/_/g")"
-    _fpath_new="$(echo "${_var_name}" | sed "s/\-/_/g")"
-    sed -i "s|${_def_github}|${_var_github}|g" "${_file}"
-    sed -i "s|${_def_copyright}|${_var_copyright}|g" "${_file}"
-    sed -i "s|${_def_author}|${_var_author}|g" "${_file}"
-    sed -i "s|${_def_maintainer}|${_var_maintainer}|g" "${_file}"
-    sed -i "s|${_def_name}|${_var_name}|g" "${_file}"
-    sed -i "s|${_def_title}|${_var_title}|g" "${_file}"
-    sed -i "s|${_fpath_def}|${_fpath_new}|g" "${_file}"
+  _file="${1}"
+  _fpath_def="$(echo "${_def_name}" | sed "s/\-/_/g")"
+  _fpath_new="$(echo "${_var_name}" | sed "s/\-/_/g")"
+  sed -i "s|${_def_github}|${_var_github}|g" "${_file}"
+  sed -i "s|${_def_copyright}|${_var_copyright}|g" "${_file}"
+  sed -i "s|${_def_author}|${_var_author}|g" "${_file}"
+  sed -i "s|${_def_maintainer}|${_var_maintainer}|g" "${_file}"
+  sed -i "s|${_def_name}|${_var_name}|g" "${_file}"
+  sed -i "s|${_def_title}|${_var_title}|g" "${_file}"
+  sed -i "s|${_fpath_def}|${_fpath_new}|g" "${_file}"
 }
 
 _files | sort | while read -r _path; do
-    echo "Processing ${_path}"
-    _update "${_path}"
+  echo "Processing ${_path}"
+  _update "${_path}"
 done
