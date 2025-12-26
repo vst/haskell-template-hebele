@@ -26,42 +26,50 @@
             };
           };
 
-          ## Get the cabal-verify command:
-          cabal-verify = pkgs.callPackage ./nix/cabal-verify { };
+          ## Common build inputs for both development and CI environments:
+          buildInputsCommon = [
+            ## Essential Haskell tools:
+            thisHaskell.cabal-install
+            thisHaskell.fourmolu
+            thisHaskell.hlint
+            thisHaskell.hpack
+            thisHaskell.stan
+            thisHaskell.weeder
 
-          ## Prepare Nix shell:
-          thisShell = thisHaskell.shellFor {
-            ## Define packages for the shell:
+            ## Other essentials:
+            pkgs.git
+            pkgs.nixpkgs-fmt
+            pkgs.prettier
+
+            ## Our development scripts:
+            (pkgs.callPackage ./nix/cabal-verify { })
+          ];
+
+          ## Development-only inputs:
+          buildInputsDevOnly = [
+            ## Haskell development tools:
+            thisHaskell.haskell-language-server
+            thisHaskell.cabal-fmt
+            thisHaskell.cabal2nix
+
+            ## Other development tools:
+            pkgs.docker-client
+            pkgs.nil
+            pkgs.upx
+          ];
+
+          ## Development shell:
+          devShell = thisHaskell.shellFor {
             packages = p: [ p.${package.name} ];
-
-            ## Enable Hoogle:
             withHoogle = false;
+            buildInputs = buildInputsCommon ++ buildInputsDevOnly;
+          };
 
-            ## Build inputs for development shell:
-            buildInputs = [
-              ## Haskell related build inputs:
-              ## TODO: Once we are on ghc > 9.10, enable apply-refact again.
-              # thisHaskell.apply-refact
-              thisHaskell.cabal-fmt
-              thisHaskell.cabal-install
-              thisHaskell.cabal2nix
-              thisHaskell.fourmolu
-              thisHaskell.haskell-language-server
-              thisHaskell.hlint
-              thisHaskell.hpack
-              thisHaskell.weeder
-
-              ## Our development scripts:
-              cabal-verify
-
-              ## Other build inputs for various development requirements:
-              pkgs.docker-client
-              pkgs.git
-              pkgs.nil
-              pkgs.nixpkgs-fmt
-              pkgs.nodePackages.prettier
-              pkgs.upx
-            ];
+          ## CI shell (minimal, fast):
+          ciShell = thisHaskell.shellFor {
+            packages = p: [ p.${package.name} ];
+            withHoogle = false;
+            buildInputs = buildInputsCommon;
           };
 
           thisPackage = pkgs.haskell.lib.justStaticExecutables (
@@ -69,7 +77,6 @@
               nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
                 pkgs.git
                 pkgs.makeWrapper
-                pkgs.ronn
               ];
 
               postFixup = (oldAttrs.postFixup or "") + ''
@@ -115,9 +122,10 @@
             default = thisPackage;
           };
 
-          ## Project development shell output:
+          ## Project development shells:
           devShells = {
-            default = thisShell;
+            default = devShell;
+            ci = ciShell;
           };
         };
     };

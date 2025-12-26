@@ -17,7 +17,7 @@ jobs:
 
       - name: "Check, Test and Build"
         run: |
-          nix develop --command cabal verify
+          nix develop .#ci --command cabal verify
 
       - name: "Build Docker Image"
         run: |
