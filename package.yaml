@@ -1,10 +1,10 @@
 name: haskell-template-hebele
 version: 0.0.0
-github: "vst/haskell-template-hebele"
+github: 'vst/haskell-template-hebele'
 license: MIT
-author: "Vehbi Sinan Tunalioglu"
-maintainer: "vst@vsthost.com"
-copyright: "Copyright (c) 2024 Vehbi Sinan Tunalioglu"
+author: 'Vehbi Sinan Tunalioglu'
+maintainer: 'vst@vsthost.com'
+copyright: 'Copyright (c) 2024 Vehbi Sinan Tunalioglu'
 
 extra-source-files:
   - README.md
