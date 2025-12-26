@@ -38,7 +38,7 @@
 
             ## Other essentials:
             pkgs.git
-            pkgs.nixpkgs-fmt
+            pkgs.nixfmt-rfc-style
             pkgs.prettier
             pkgs.taplo
 

@@ -137,8 +137,8 @@ _run_check "fourmolu (v$(fourmolu --version | head -n1 | cut -d' ' -f2))" \
 _run_check "prettier (v$(prettier --version))" \
   prettier --check .
 
-_run_check "nixpkgs-fmt (v$(nixpkgs-fmt --version 2>&1 | cut -d' ' -f2))" \
-  find . -iname "*.nix" -exec nixpkgs-fmt --check {} \;
+_run_check "nixfmt (v$(nixfmt --version | cut -f2 -d" "))" \
+  find . -iname "*.nix" -exec nixfmt --check {} +
 
 _run_check "taplo lint (v$(taplo --version | cut -f2 -d" "))" \
   taplo lint
