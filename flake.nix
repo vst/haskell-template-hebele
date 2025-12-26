@@ -6,7 +6,8 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = inputs @ { nixpkgs, flake-parts, ... }:
+  outputs =
+    inputs@{ nixpkgs, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         ./nix/flake-modules/read-yaml
@@ -14,7 +15,16 @@
 
       systems = nixpkgs.lib.systems.flakeExposed;
 
-      perSystem = { config, self', inputs', pkgs, system, readYAML, ... }:
+      perSystem =
+        {
+          config,
+          self',
+          inputs',
+          pkgs,
+          system,
+          readYAML,
+          ...
+        }:
         let
           ## Read package information:
           package = readYAML ./package.yaml;
@@ -87,7 +97,7 @@
                 mkdir -p $out/{bin}
 
                 ## Wrap program to add PATHs to dependencies:
-                wrapProgram $out/bin/${package.name} --prefix PATH : ${pkgs.lib.makeBinPath []}
+                wrapProgram $out/bin/${package.name} --prefix PATH : ${pkgs.lib.makeBinPath [ ]}
               '';
             })
           );

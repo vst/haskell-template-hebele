@@ -1,9 +1,10 @@
-{ lib
-, writeShellApplication
-, bash
-, coreutils
-, moreutils
-, yq-go
+{
+  lib,
+  writeShellApplication,
+  bash,
+  coreutils,
+  moreutils,
+  yq-go,
 }:
 
 writeShellApplication {
@@ -23,4 +24,3 @@ writeShellApplication {
     platforms = platforms.all;
   };
 }
-
