@@ -56,7 +56,7 @@ hpack &&
     direnv reload &&
     fourmolu -i app/ src/ test/ &&
     prettier --write . &&
-    find . -iname "*.nix" -not -path "*/nix/sources.nix" -print0 | xargs --null nixpkgs-fmt &&
+    find . -iname "*.nix" -print0 | xargs --null nixpkgs-fmt &&
     hlint app/ src/ test/ &&
     cabal build -O0 &&
     cabal run -O0 haskell-template-hebele -- --version &&
@@ -64,22 +64,22 @@ hpack &&
     cabal haddock -O0
 ```
 
-To run checks, tests and build the codebase in the development environment, run:
+To run checks, linters, tests and build the codebase in the development environment, run:
 
 ```sh
-cabal-dev-test-build
+cabal-verify
 ```
 
-You can pass `-c` to clean the build artifacts first:
+You can pass `-c` (or `--clean`) to clean the build artifacts first:
 
 ```sh
-cabal-dev-test-build -c
+cabal-verify -c
 ```
 
 As of Cabal 3.12, you can now run the above as an external `cabal` command:
 
 ```sh
-cabal dev-test-build [-c]
+cabal verify [-c|--clean]
 ```
 
 <!-- REFERENCES -->

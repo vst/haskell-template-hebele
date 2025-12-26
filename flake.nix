@@ -25,12 +25,8 @@
           };
         };
 
-        ## Prepare dev-test-build script:
-        dev-test-build = pkgs.writeShellApplication {
-          name = "cabal-dev-test-build";
-          text = builtins.readFile ./nix/dev-test-build.sh;
-          runtimeInputs = [ pkgs.bash pkgs.bc pkgs.moreutils ];
-        };
+        ## Get the cabal-verify command:
+        cabal-verify = pkgs.callPackage ./nix/cabal-verify { };
 
         ## Prepare Nix shell:
         thisShell = thisHaskell.shellFor {
@@ -55,7 +51,7 @@
             thisHaskell.weeder
 
             ## Our development scripts:
-            dev-test-build
+            cabal-verify
 
             ## Other build inputs for various development requirements:
             pkgs.docker-client

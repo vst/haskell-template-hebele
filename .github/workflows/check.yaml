@@ -17,7 +17,7 @@ jobs:
 
       - name: "Check, Test and Build"
         run: |
-          nix develop --command bash -c "cabal update --ignore-project && cabal dev-test-build"
+          nix develop --command cabal verify
 
       - name: "Build Docker Image"
         run: |
