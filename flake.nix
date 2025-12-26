@@ -55,7 +55,6 @@
             ## Other development tools:
             pkgs.docker-client
             pkgs.nil
-            pkgs.upx
           ];
 
           ## Development shell:
