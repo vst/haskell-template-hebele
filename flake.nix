@@ -3,120 +3,122 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        ## Import nixpkgs:
-        pkgs = import nixpkgs { inherit system; };
+  outputs = inputs @ { nixpkgs, flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        ./nix/flake-modules/read-yaml
+      ];
 
-        ## Load readYAML helper:
-        readYAML = pkgs.callPackage ./nix/read-yaml.nix { };
+      systems = nixpkgs.lib.systems.flakeExposed;
 
-        ## Read package information:
-        package = readYAML ./package.yaml;
+      perSystem = { config, self', inputs', pkgs, system, readYAML, ... }:
+        let
+          ## Read package information:
+          package = readYAML ./package.yaml;
 
-        ## Get our Haskell:
-        thisHaskell = pkgs.haskellPackages.override {
-          overrides = self: super: {
-            ${package.name} = self.callCabal2nix package.name ./. { };
+          ## Get our Haskell:
+          thisHaskell = pkgs.haskellPackages.override {
+            overrides = self: super: {
+              ${package.name} = self.callCabal2nix package.name ./. { };
+            };
           };
-        };
 
-        ## Get the cabal-verify command:
-        cabal-verify = pkgs.callPackage ./nix/cabal-verify { };
+          ## Get the cabal-verify command:
+          cabal-verify = pkgs.callPackage ./nix/cabal-verify { };
 
-        ## Prepare Nix shell:
-        thisShell = thisHaskell.shellFor {
-          ## Define packages for the shell:
-          packages = p: [ p.${package.name} ];
+          ## Prepare Nix shell:
+          thisShell = thisHaskell.shellFor {
+            ## Define packages for the shell:
+            packages = p: [ p.${package.name} ];
 
-          ## Enable Hoogle:
-          withHoogle = false;
+            ## Enable Hoogle:
+            withHoogle = false;
 
-          ## Build inputs for development shell:
-          buildInputs = [
-            ## Haskell related build inputs:
-            ## TODO: Once we are on ghc > 9.10, enable apply-refact again.
-            # thisHaskell.apply-refact
-            thisHaskell.cabal-fmt
-            thisHaskell.cabal-install
-            thisHaskell.cabal2nix
-            thisHaskell.fourmolu
-            thisHaskell.haskell-language-server
-            thisHaskell.hlint
-            thisHaskell.hpack
-            thisHaskell.weeder
+            ## Build inputs for development shell:
+            buildInputs = [
+              ## Haskell related build inputs:
+              ## TODO: Once we are on ghc > 9.10, enable apply-refact again.
+              # thisHaskell.apply-refact
+              thisHaskell.cabal-fmt
+              thisHaskell.cabal-install
+              thisHaskell.cabal2nix
+              thisHaskell.fourmolu
+              thisHaskell.haskell-language-server
+              thisHaskell.hlint
+              thisHaskell.hpack
+              thisHaskell.weeder
 
-            ## Our development scripts:
-            cabal-verify
+              ## Our development scripts:
+              cabal-verify
 
-            ## Other build inputs for various development requirements:
-            pkgs.docker-client
-            pkgs.git
-            pkgs.nil
-            pkgs.nixpkgs-fmt
-            pkgs.nodePackages.prettier
-            pkgs.upx
-          ];
-        };
-
-        thisPackage = pkgs.haskell.lib.justStaticExecutables (
-          thisHaskell.${package.name}.overrideAttrs (oldAttrs: {
-            nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
+              ## Other build inputs for various development requirements:
+              pkgs.docker-client
               pkgs.git
-              pkgs.makeWrapper
-              pkgs.ronn
+              pkgs.nil
+              pkgs.nixpkgs-fmt
+              pkgs.nodePackages.prettier
+              pkgs.upx
             ];
+          };
 
-            postFixup = (oldAttrs.postFixup or "") + ''
-              ## Create output directories:
-              mkdir -p $out/{bin}
+          thisPackage = pkgs.haskell.lib.justStaticExecutables (
+            thisHaskell.${package.name}.overrideAttrs (oldAttrs: {
+              nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
+                pkgs.git
+                pkgs.makeWrapper
+                pkgs.ronn
+              ];
 
-              ## Wrap program to add PATHs to dependencies:
-              wrapProgram $out/bin/${package.name} --prefix PATH : ${pkgs.lib.makeBinPath []}
+              postFixup = (oldAttrs.postFixup or "") + ''
+                ## Create output directories:
+                mkdir -p $out/{bin}
+
+                ## Wrap program to add PATHs to dependencies:
+                wrapProgram $out/bin/${package.name} --prefix PATH : ${pkgs.lib.makeBinPath []}
+              '';
+            })
+          );
+
+          thisDocker = pkgs.dockerTools.buildImage {
+            name = "${package.name}";
+            tag = "v${package.version}";
+            created = "now";
+
+            copyToRoot = pkgs.buildEnv {
+              name = "image-root";
+              paths = [ pkgs.cacert ];
+              pathsToLink = [ "/etc" ];
+            };
+
+            runAsRoot = ''
+              #!${pkgs.runtimeShell}
+              ${pkgs.dockerTools.shadowSetup}
+              groupadd -r users
+              useradd -r -g users patron
             '';
-          })
-        );
 
-        thisDocker = pkgs.dockerTools.buildImage {
-          name = "${package.name}";
-          tag = "v${package.version}";
-          created = "now";
-
-          copyToRoot = pkgs.buildEnv {
-            name = "image-root";
-            paths = [ pkgs.cacert ];
-            pathsToLink = [ "/etc" ];
+            config = {
+              User = "patron";
+              Entrypoint = [ "${thisPackage}/bin/${package.name}" ];
+              Cmd = null;
+            };
+          };
+        in
+        {
+          ## Project packages output:
+          packages = {
+            "${package.name}" = thisPackage;
+            docker = thisDocker;
+            default = thisPackage;
           };
 
-          runAsRoot = ''
-            #!${pkgs.runtimeShell}
-            ${pkgs.dockerTools.shadowSetup}
-            groupadd -r users
-            useradd -r -g users patron
-          '';
-
-          config = {
-            User = "patron";
-            Entrypoint = [ "${thisPackage}/bin/${package.name}" ];
-            Cmd = null;
+          ## Project development shell output:
+          devShells = {
+            default = thisShell;
           };
         };
-      in
-      {
-        ## Project packages output:
-        packages = {
-          "${package.name}" = thisPackage;
-          docker = thisDocker;
-          default = self.packages.${system}.${package.name};
-        };
-
-        ## Project development shell output:
-        devShells = {
-          default = thisShell;
-        };
-      });
+    };
 }
