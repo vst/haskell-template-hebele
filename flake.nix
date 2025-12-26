@@ -40,6 +40,7 @@
             pkgs.git
             pkgs.nixfmt-rfc-style
             pkgs.prettier
+            pkgs.shellcheck
             pkgs.statix
             pkgs.taplo
 

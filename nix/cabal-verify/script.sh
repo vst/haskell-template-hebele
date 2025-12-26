@@ -137,6 +137,9 @@ _run_check "nixfmt (v$(nixfmt --numeric-version))" \
 _run_check "statix (v$(statix --version | cut -f2 -d" "))" \
   statix check
 
+_run_check "shellcheck (v$(shellcheck --version | grep "^version" | head -n1 | cut -f2 -d" "))" \
+  find . -type f -iname "*.sh" -exec shellcheck {} +
+
 _run_check "prettier (v$(prettier --version))" \
   prettier --check .
 
