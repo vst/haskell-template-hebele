@@ -140,6 +140,12 @@ _run_check "prettier (v$(prettier --version))" \
 _run_check "nixpkgs-fmt (v$(nixpkgs-fmt --version 2>&1 | cut -d' ' -f2))" \
   find . -iname "*.nix" -exec nixpkgs-fmt --check {} \;
 
+_run_check "taplo lint (v$(taplo --version | cut -f2 -d" "))" \
+  taplo lint
+
+_run_check "taplo format (v$(taplo --version | cut -f2 -d" "))" \
+  taplo format --check
+
 _run_check "hlint (v$(hlint --numeric-version))" \
   hlint app/ src/ test/
 

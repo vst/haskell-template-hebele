@@ -40,6 +40,7 @@
             pkgs.git
             pkgs.nixpkgs-fmt
             pkgs.prettier
+            pkgs.taplo
 
             ## Our development scripts:
             (pkgs.callPackage ./nix/cabal-verify { })
