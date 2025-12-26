@@ -24,7 +24,7 @@ your answers.
 
 EOF
 
-read -p "Do you want to proceed? (y/N) " -n 1 -r
+read -rp "Do you want to proceed? (y/N) " -n 1
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   >&2 echo "Exiting..."
 fi
@@ -33,42 +33,42 @@ echo
 echo
 echo "1/6. Project Name: The project name must be a valid Haskell package name. See <https://cabal.readthedocs.io/en/3.4/cabal-package.html#pkg-field-name>."
 echo
-read -p "Enter the project name [${_def_name}]: " _var_name
+read -rp "Enter the project name [${_def_name}]: " _var_name
 _var_name="${_var_name:-"${_def_name}"}"
 echo
 
 echo
 echo "2/6. Project Title: The project title appearing on the README header, CLI header etc..."
 echo
-read -p "Enter the project title [${_def_title}]: " _var_title
+read -rp "Enter the project title [${_def_title}]: " _var_title
 _var_title="${_var_title:-"${_def_title}"}"
 echo
 
 echo
 echo "3/6. GitHub Repository: This must be in the form of <repository-owner>/<repository-name>."
 echo
-read -p "Enter the GitHub repository [${_def_github}]: " _var_github
+read -rp "Enter the GitHub repository [${_def_github}]: " _var_github
 _var_github="${_var_github:-"${_def_github}"}"
 echo
 
 echo
 echo "4/6. Author: Who is the author? See <https://cabal.readthedocs.io/en/3.4/cabal-package.html#pkg-field-author>"
 echo
-read -p "Enter the author [${_def_author}]: " _var_author
+read -rp "Enter the author [${_def_author}]: " _var_author
 _var_author="${_var_author:-"${_def_author}"}"
 echo
 
 echo
 echo "5/6. Maintainer: Who is the maintainer? See <https://cabal.readthedocs.io/en/3.4/cabal-package.html#pkg-field-maintainer>"
 echo
-read -p "Enter the maintainer [${_def_maintainer}]: " _var_maintainer
+read -rp "Enter the maintainer [${_def_maintainer}]: " _var_maintainer
 _var_maintainer="${_var_maintainer:-"${_def_maintainer}"}"
 echo
 
 echo
 echo "6/6. Copyright: What is the copyright notice? See <https://cabal.readthedocs.io/en/3.4/cabal-package.html#pkg-field-copyright>"
 echo
-read -p "Enter the copyright [${_def_copyright}]: " _var_copyright
+read -rp "Enter the copyright [${_def_copyright}]: " _var_copyright
 _var_copyright="${_var_copyright:-"${_def_copyright}"}"
 echo
 
@@ -87,7 +87,7 @@ cat <<EOF
 EOF
 
 echo
-read -p "Do you want to proceed? (y/N) " -n 1 -r
+read -rp "Do you want to proceed? (y/N) " -n 1
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   >&2 echo "Exiting..."
 fi
@@ -99,8 +99,8 @@ _files() {
 
 _update() {
   _file="${1}"
-  _fpath_def="$(echo "${_def_name}" | sed "s/\-/_/g")"
-  _fpath_new="$(echo "${_var_name}" | sed "s/\-/_/g")"
+  _fpath_def="${_def_name//-/_}"
+  _fpath_new="${_var_name//-/_}"
   sed -i "s|${_def_github}|${_var_github}|g" "${_file}"
   sed -i "s|${_def_copyright}|${_var_copyright}|g" "${_file}"
   sed -i "s|${_def_author}|${_var_author}|g" "${_file}"
