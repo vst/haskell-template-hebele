@@ -40,6 +40,7 @@
             pkgs.git
             pkgs.nixfmt-rfc-style
             pkgs.prettier
+            pkgs.statix
             pkgs.taplo
 
             ## Our development scripts:
