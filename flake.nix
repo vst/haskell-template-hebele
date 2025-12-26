@@ -41,6 +41,7 @@
             pkgs.nixfmt-rfc-style
             pkgs.prettier
             pkgs.shellcheck
+            pkgs.shfmt
             pkgs.statix
             pkgs.taplo
 
